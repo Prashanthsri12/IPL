@@ -8,7 +8,7 @@ import warnings
 warnings.filterwarnings('ignore') 
 
 def main():
-
+    st. set_page_config(layout="wide")
     st.title("IPL Player Effectiveness",help=None)
     st.caption("Explore in-depth player performance insights with our interactive IPL analytics dashboard. Select any two teams, and the algorithm analyzes past encounters to evaluate how players have performed against each other. Gain valuable data-driven insights to compare player effectiveness and make informed predictions for upcoming matches.")
     st.sidebar.title("Inputs section")
