@@ -31,62 +31,79 @@ def main():
     elif team_1_ in team_input_names and team_2_ in team_input_names: 
         st.info(f'Teams Selected : {team_1_} & {team_2_}')
 
-        team_1 = team_mapping[team_mapping['team_input']==team_1_]['Team'].values[0]
-        team_2 = team_mapping[team_mapping['team_input']==team_2_]['Team'].values[0]
+        with st.spinner(text='In progress'):
+            bar = st.progress(0)
 
-        team_1_short = team_mapping[team_mapping['team_input']==team_1_]['Team_Short'].values[0]
-        team_2_short = team_mapping[team_mapping['team_input']==team_2_]['Team_Short'].values[0]
+            team_1 = team_mapping[team_mapping['team_input']==team_1_]['Team'].values[0]
+            team_2 = team_mapping[team_mapping['team_input']==team_2_]['Team'].values[0]
 
-        selected_players_df = player_mapping[player_mapping['Team'].isin([team_1,team_2])].reset_index(drop=True)
-        player_team_1_df = player_mapping[player_mapping['Team'].isin([team_1])].reset_index(drop=True)
-        player_team_2_df = player_mapping[player_mapping['Team'].isin([team_2])].reset_index(drop=True)
+            team_1_short = team_mapping[team_mapping['team_input']==team_1_]['Team_Short'].values[0]
+            team_2_short = team_mapping[team_mapping['team_input']==team_2_]['Team_Short'].values[0]
 
-        player_team_1_list = player_team_1_df['new_player_names'].unique()
-        player_team_2_list = player_team_2_df['new_player_names'].unique()
+            selected_players_df = player_mapping[player_mapping['Team'].isin([team_1,team_2])].reset_index(drop=True)
+            player_team_1_df = player_mapping[player_mapping['Team'].isin([team_1])].reset_index(drop=True)
+            player_team_2_df = player_mapping[player_mapping['Team'].isin([team_2])].reset_index(drop=True)
 
-        team_1_batting = delivery_df[(delivery_df['batter'].isin(player_team_1_list)) & (delivery_df['bowler'].isin(player_team_2_list))].reset_index(drop=True)
-        team_1_batting_metrics = calculate_batsman_metrics(team_1_batting)
+            player_team_1_list = player_team_1_df['new_player_names'].unique()
+            player_team_2_list = player_team_2_df['new_player_names'].unique()
 
-        team_2_batting = delivery_df[(delivery_df['batter'].isin(player_team_2_list)) & (delivery_df['bowler'].isin(player_team_1_list))].reset_index(drop=True)
-        team_2_batting_metrics = calculate_batsman_metrics(team_2_batting)
+            bar.progress(10)
 
-        team_1_bowling = delivery_df[delivery_df['bowler'].isin(player_team_1_list) & (delivery_df['batter'].isin(player_team_2_list))].reset_index(drop=True)
-        team_1_bowling_metrics = calculate_bowler_metrics(team_1_bowling)
+            team_1_batting = delivery_df[(delivery_df['batter'].isin(player_team_1_list)) & (delivery_df['bowler'].isin(player_team_2_list))].reset_index(drop=True)
+            team_1_batting_metrics = calculate_batsman_metrics(team_1_batting)
 
-        team_2_bowling = delivery_df[delivery_df['bowler'].isin(player_team_2_list) & (delivery_df['batter'].isin(player_team_1_list))].reset_index(drop=True)
-        team_2_bowling_metrics = calculate_bowler_metrics(team_2_bowling)
+            team_2_batting = delivery_df[(delivery_df['batter'].isin(player_team_2_list)) & (delivery_df['bowler'].isin(player_team_1_list))].reset_index(drop=True)
+            team_2_batting_metrics = calculate_batsman_metrics(team_2_batting)
 
-        team_1_batter_level_plots = create_batter_effectiveness_plots(team_1_batting_metrics)
-        team_1_bowler_level_plots = create_bowler_effectiveness_plots(team_1_bowling_metrics)
+            bar.progress(20)
 
-        team_2_batter_level_plots = create_batter_effectiveness_plots(team_1_batting_metrics)
-        team_2_bowler_level_plots = create_bowler_effectiveness_plots(team_1_bowling_metrics)
+            team_1_bowling = delivery_df[delivery_df['bowler'].isin(player_team_1_list) & (delivery_df['batter'].isin(player_team_2_list))].reset_index(drop=True)
+            team_1_bowling_metrics = calculate_bowler_metrics(team_1_bowling)
+
+            team_2_bowling = delivery_df[delivery_df['bowler'].isin(player_team_2_list) & (delivery_df['batter'].isin(player_team_1_list))].reset_index(drop=True)
+            team_2_bowling_metrics = calculate_bowler_metrics(team_2_bowling)
+
+            bar.progress(30)
+
+            team_1_batter_level_plots = create_batter_effectiveness_plots(team_1_batting_metrics)
+            team_1_bowler_level_plots = create_bowler_effectiveness_plots(team_1_bowling_metrics)
+
+            team_2_batter_level_plots = create_batter_effectiveness_plots(team_1_batting_metrics)
+            team_2_bowler_level_plots = create_bowler_effectiveness_plots(team_1_bowling_metrics)
+
+            bar.progress(40)
+
+            with st.expander("Team 1 Overall Analysis", icon=":material/info:"):
+                st.text("Team 1 Batting Metrics")
+                st.pyplot(team_1_batter_level_plots)
+                st.text("Team 1 Bowling Metrics")
+                st.pyplot(team_1_bowler_level_plots)
+            bar.progress(50)
+
+            with st.expander("Team 1 Player Level Analysis", icon=":material/info:"):
+                st.text("Coming Soon!")
+            #     team_1_selected_plater = st.selectbox('Team 1', player_team_1_list, index=None, key = 'team_1_selected_plater') #use players from team_1_bowling_metrics and team_1_batting_metrics only and check if player present before plot
+            #     if team_1_selected_plater != None:
+            #         team_1_selected_plater_bowler_plot_data = team_1_bowling_metrics[team_1_bowling_metrics['bowler']==team_1_selected_plater]
+            #         team_1_selected_plater_batter_plot_data = team_1_batting_metrics[team_1_batting_metrics['batter']==team_1_selected_plater]
+            #         selected_player_bowling_plot_1 = selected_player_bowling_1(team_1_selected_plater_bowler_plot_data,team_1_selected_plater)
+            #         selected_player_batting_plot_1 = selected_player_batting_1(team_1_selected_plater_batter_plot_data,team_1_selected_plater)
 
 
-        with st.expander("Team 1 Overall Analysis", icon=":material/info:"):
-            st.text("Team 1 Batting Metrics")
-            st.pyplot(team_1_batter_level_plots)
-            st.text("Team 1 Bowling Metrics")
-            st.pyplot(team_1_bowler_level_plots)
 
-        # with st.expander("Team 1 Player Level Analysis", icon=":material/info:"):
-        #     team_1_selected_plater = st.selectbox('Team 1', player_team_1_list, index=None, key = 'team_1_selected_plater') #use players from team_1_bowling_metrics and team_1_batting_metrics only and check if player present before plot
-        #     if team_1_selected_plater != None:
-        #         team_1_selected_plater_bowler_plot_data = team_1_bowling_metrics[team_1_bowling_metrics['bowler']==team_1_selected_plater]
-        #         team_1_selected_plater_batter_plot_data = team_1_batting_metrics[team_1_batting_metrics['batter']==team_1_selected_plater]
-        #         selected_player_bowling_plot_1 = selected_player_bowling_1(team_1_selected_plater_bowler_plot_data,team_1_selected_plater)
-        #         selected_player_batting_plot_1 = selected_player_batting_1(team_1_selected_plater_batter_plot_data,team_1_selected_plater)
+            
+            with st.expander("Team 2 overall Analysis", icon=":material/info:"):
+                st.text("Team 2 Batting Metrics")
+                st.pyplot(team_2_batter_level_plots)
+                st.text("Team 2 Bowling Metrics")
+                st.pyplot(team_2_bowler_level_plots)
+            bar.progress(60)
 
+            with st.expander("Team 2 Player Level Analysis", icon=":material/info:"):
+                st.text("Coming Soon!")
+            bar.progress(100)
 
-
-        
-        with st.expander("Team 2 overall Analysis", icon=":material/info:"):
-            st.text("Team 2 Batting Metrics")
-            st.pyplot(team_2_batter_level_plots)
-            st.text("Team 2 Bowling Metrics")
-            st.pyplot(team_2_bowler_level_plots)
-
-
+        st.success('Analysis Completed')
 
 
 if __name__ == '__main__':
