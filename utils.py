@@ -7,10 +7,10 @@ import streamlit as st
 
 @st.cache_data(persist=True)
 def load_data():
-    match_df = pd.read_csv("C:/Users/Prashanth/Documents/Workspace/IPL/matches.csv")
-    player_mapping = pd.read_csv("C:/Users/Prashanth/Documents/Workspace/IPL/Player_map.csv")
-    team_mapping = pd.read_csv("C:/Users/Prashanth/Documents/Workspace/IPL/Team_map.csv")
-    delivery_df = pd.read_csv("C:/Users/Prashanth/Documents/Workspace/IPL/deliveries.csv")
+    match_df = pd.read_csv("https://raw.githubusercontent.com/Prashanthsri12/IPL/main/matches.csv")
+    player_mapping = pd.read_csv("https://raw.githubusercontent.com/Prashanthsri12/IPL/main/Player_map.csv")
+    team_mapping = pd.read_csv("https://raw.githubusercontent.com/Prashanthsri12/IPL/main/Team_map.csv")    
+    delivery_df = pd.read_csv("https://raw.githubusercontent.com/Prashanthsri12/IPL/main/deliveries.csv")
     return match_df,player_mapping,team_mapping,delivery_df
 
 def calculate_batsman_metrics(df):
